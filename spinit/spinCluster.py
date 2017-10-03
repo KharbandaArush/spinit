@@ -1,6 +1,16 @@
 import argparse
 import json
-import boto
+import boto.vpc
+
+
+def getInstances():
+    #bound_regional_ec2_conn = boto.ec2.connect_to_region(setup['region'])
+    a= boto.ec2.connect_to_region(setup['region'], aws_access_key_id=setup['aws_access_key_id'],aws_secret_access_key=setup['aws_secret_access_key']).get_all_instances()
+    instanceList=[]
+    for instance in a:
+        instanceList.append(instance.instances)
+    return instanceList
+
 
 
 with open('setup.json') as data_file:
@@ -142,27 +152,12 @@ def spinYarnCluster():
 
 
 
-def startSparkService(instanceId):
-    print("spin")
-
-def startKafkaService(instanceId):
-    print("spin")
-
-def startHdfsService(instanceId):
-    print("spin")
-
-def startMesosService(instanceId):
-    print("spin")
-
-def startHbaseService(instanceId):
-    print("spin")
-
-def startYarnService(instanceId):
-    print("spin")
 
 
 def printConfiguration():
-    print("Configuration")
+    instances=getInstances()
+    for instance in instances:
+        print instance
 
 def startServiceOnInstance(instanceId,service):
     if(service=='S'):
@@ -187,14 +182,25 @@ if __name__ == '__main__':
 def spinZooCluster():
     print("Spin CLuster Zoo")
 
-def getInstances():
-    bound_regional_ec2_conn = boto.ec2.connect_to_region(setup['region'])
-    for r in boto.vpc.VPCConnection(region=setup['region']).get_all_instances():
-        print r
 
+def startSparkService(instanceId):
+    print("spin")
 
+def startKafkaService(instanceId):
+    print("spin")
 
+def startHdfsService(instanceId):
+    print("spin")
 
+def startMesosService(instanceId):
+    print("spin")
+
+def startHbaseService(instanceId):
+    print("spin")
+
+# Start service and add tag to instance
+def startYarnService(instanceId):
+    print("spin")
 
     # this is what would make an ideal configuration but i dont want to be binding to it
 #==================================================================================
