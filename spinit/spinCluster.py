@@ -1,5 +1,6 @@
 import argparse
 import json
+import boto
 
 
 with open('setup.json') as data_file:
@@ -65,7 +66,7 @@ def spinSparkCluster():
 
     i=0
     for instance in setup['instance_types']:
-        print(str(i+1)+". "+instance+" "+setup['instance_cores'][i] +" "+setup['instance_memory'][i])
+        print(str(i+1)+". "+instance+" "+str(setup['instance_cores'][i]) +" cores "+str(setup['instance_memory'][i])+" GB ")
         i=i+1
     instanceType = int(raw_input("Instance Type:[1-"+str(i)+"]"))
 
@@ -186,10 +187,16 @@ if __name__ == '__main__':
 def spinZooCluster():
     print("Spin CLuster Zoo")
 
+def getInstances():
+    bound_regional_ec2_conn = boto.ec2.connect_to_region(setup['region'])
+    for r in boto.vpc.VPCConnection(region=setup['region']).get_all_instances():
+        print r
 
 
 
-# this is what would make an ideal configuration but i dont want to be binding to it
+
+
+    # this is what would make an ideal configuration but i dont want to be binding to it
 #==================================================================================
 #machine1    ||   machine2   || machine3   ||machine4(8 core)   ||  machine5     ||
 #==================================================================================
