@@ -4,12 +4,19 @@ import boto.vpc
 
 
 def getInstances():
-    #bound_regional_ec2_conn = boto.ec2.connect_to_region(setup['region'])
     a= boto.ec2.connect_to_region(setup['region'], aws_access_key_id=setup['aws_access_key_id'],aws_secret_access_key=setup['aws_secret_access_key']).get_all_instances()
     instanceList=[]
     for instance in a:
         instanceList.append(instance.instances)
     return instanceList
+
+def checkIfAlreadyRunning(type):
+    instances=getInstances()
+    running=False
+    for instance in instances:
+        if str(instance[0].tags).__contains__(type):
+            running=True
+    return running
 
 
 
@@ -62,6 +69,7 @@ def main():
 
 #security_groups, cluster_size, mode
 def spinSparkCluster():
+    checkIf AlreadyRunning('S')
     print("Provide information about the spark cluster")
     mode = raw_input("Mode - Standalone / Mesos / Yarn (S / m / y):")
     if (mode == None):
@@ -157,7 +165,7 @@ def spinYarnCluster():
 def printConfiguration():
     instances=getInstances()
     for instance in instances:
-        print instance
+        print "ID: "+instance[0].id +" Type: "+instance[0].instance_type+" Tags: "+str(instance[0].tags)
 
 def startServiceOnInstance(instanceId,service):
     if(service=='S'):
